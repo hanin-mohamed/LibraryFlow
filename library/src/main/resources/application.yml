@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/moviesdb
+    username: movies
+    password: movies
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: false
+library:
+  defaultLoanDays: 14
+  maxOpenLoansPerMember: 5
+
+
+jwt:
+  secret: "my-super-long-secret-at-least-64-chars-1234567890abcdef"
+  expirationMinutes: 120
