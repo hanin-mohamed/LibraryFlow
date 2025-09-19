@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public record CreateBorrowRequest(
         @NotNull UUID memberId,
-        @NotNull UUID copyId,
+        @NotNull UUID bookId,
         @NotNull @Future(message = "dueAt must be in the future") Instant dueAt
 ) { }

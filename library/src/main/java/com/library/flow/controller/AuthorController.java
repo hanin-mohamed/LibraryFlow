@@ -1,12 +1,14 @@
 package com.library.flow.controller;
 
 import com.library.flow.common.dto.AppResponse;
+import com.library.flow.common.dto.CreateAuthorRequest;
 import com.library.flow.entity.Author;
 
 import com.library.flow.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,8 +40,7 @@ public class AuthorController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','LIBRARIAN')")
-    @Operation(summary = "Create author (entity body)")
-    public AppResponse<UUID> addAuthor(@RequestBody Author body ) {
+    public AppResponse<UUID> addAuthor(@Valid @RequestBody CreateAuthorRequest body) {
         UUID id = service.createAuthor(body);
         return AppResponse.created(id);
     }

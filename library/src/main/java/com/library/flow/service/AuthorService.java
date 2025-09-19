@@ -1,5 +1,6 @@
 package com.library.flow.service;
 
+import com.library.flow.common.dto.CreateAuthorRequest;
 import com.library.flow.entity.Author;
 import com.library.flow.repository.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,9 +19,8 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
 
     @Transactional
-    public UUID createAuthor(Author author){
+    public UUID createAuthor(CreateAuthorRequest author){
         log.info("createAuthor: start");
-        author.setId(null);
         authorRepository.save(author);
         log.info("createAuthor: saved id={}", author.getId());
         return author.getId();

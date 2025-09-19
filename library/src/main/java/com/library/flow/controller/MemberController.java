@@ -5,7 +5,6 @@ import com.library.flow.entity.Member;
 import com.library.flow.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -36,7 +35,7 @@ public class MemberController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN','LIBRARIAN')")
+    @PreAuthorize("hasAnyRole('ADMIN','LIBRARIAN','STAFF')")
     @Operation(summary = "Create member (entity body)")
     public AppResponse<UUID> createMember(@RequestBody Member body) {
         UUID id = memberService.addMember(body);

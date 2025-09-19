@@ -1,11 +1,14 @@
 package com.library.flow.controller;
 
 import com.library.flow.common.dto.AppResponse;
+import com.library.flow.common.dto.CreateBookRequest;
+import com.library.flow.common.dto.UpdateBookRequest;
 import com.library.flow.entity.Book;
 import com.library.flow.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -37,19 +40,19 @@ public class BookController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','LIBRARIAN')")
-    @Operation(summary = "Create book entity")
-    public AppResponse<UUID> addBook(@RequestBody Book body, HttpServletResponse res) {
-        UUID id = service.addBook(body);
-        return AppResponse.created(id);
+    public AppResponse<Book> addBook(@Valid @RequestBody CreateBookRequest body) {
+        Book book = service.addBook(body);
+        return AppResponse.created(book);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','LIBRARIAN')")
-    @Operation(summary = "Update book")
-    public AppResponse<Void> updateByUUID(@PathVariable UUID id, @RequestBody Book body) {
-        service.updateBook(id, body);
-        return AppResponse.ok(null);
+    public AppResponse<Book> updateBook(@PathVariable UUID id,
+                                        @Valid @RequestBody UpdateBookRequest body) {
+        Book updated = service.updateBook(id, body);
+        return AppResponse.ok(updated);
     }
+
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

@@ -1,6 +1,7 @@
 package com.library.flow.service;
 
 import com.library.flow.common.dto.BorrowStatus;
+import com.library.flow.common.dto.CreateBorrowRequest;
 import com.library.flow.entity.Book;
 import com.library.flow.entity.BorrowBook;
 import com.library.flow.entity.Member;
@@ -38,13 +39,13 @@ public class BorrowService {
     private static final Set<BorrowStatus> ACTIVE_STATUSES = EnumSet.of(BorrowStatus.OPEN, BorrowStatus.OVERDUE);
 
     @Transactional
-    public UUID borrow(UUID memberId, UUID bookId, Instant requestedDueAt) {
+    public UUID borrow(CreateBorrowRequest request) {
         Instant nowUtc = Instant.now();
-        Instant dueAtFinal = requestedDueAt != null ? requestedDueAt : nowUtc.plus(defaultLoanDays, ChronoUnit.DAYS);
+        Instant dueAtFinal = request.dueAt() != null ? request.dueAt() : nowUtc.plus(defaultLoanDays, ChronoUnit.DAYS);
         if (dueAtFinal.isBefore(nowUtc)) throw new IllegalArgumentException("dueAt must be in the future");
 
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("member"));
-        Book book = bookRepository.findByIdForUpdate(bookId);
+        Member member = memberRepository.findById(request.memberId()).orElseThrow(() -> new EntityNotFoundException("member"));
+        Book book = bookRepository.findByIdForUpdate(request.bookId());
         if (book == null) throw new EntityNotFoundException("book");
 
         if (book.getAvailableCopies() == null || book.getAvailableCopies() <= 0) {
