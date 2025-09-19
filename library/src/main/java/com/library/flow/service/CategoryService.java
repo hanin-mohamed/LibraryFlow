@@ -1,5 +1,6 @@
 package com.library.flow.service;
 
+import com.library.flow.common.error.custom.NotFoundException;
 import com.library.flow.entity.Category;
 import com.library.flow.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,7 +30,7 @@ public class CategoryService {
                 throw new IllegalArgumentException("category cannot be its own parent");
             }
             category.setParent(repository.findById(parentId)
-                    .orElseThrow(() -> new EntityNotFoundException("parent")));
+                    .orElseThrow(() -> new NotFoundException("parent", parentId)));
         } else {
             category.setParent(null);
         }
@@ -50,7 +51,7 @@ public class CategoryService {
                 throw new IllegalArgumentException("category cannot be its own parent");
             }
             category.setParent(repository.findById(parentId)
-                    .orElseThrow(() -> new EntityNotFoundException("parent")));
+                    .orElseThrow(() -> new NotFoundException("parent",parentId)));
         } else {
             category.setParent(null);
         }

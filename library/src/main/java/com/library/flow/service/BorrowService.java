@@ -2,6 +2,7 @@ package com.library.flow.service;
 
 import com.library.flow.common.dto.BorrowStatus;
 import com.library.flow.common.dto.CreateBorrowRequest;
+import com.library.flow.common.error.custom.NotFoundException;
 import com.library.flow.entity.Book;
 import com.library.flow.entity.BorrowBook;
 import com.library.flow.entity.Member;
@@ -44,9 +45,10 @@ public class BorrowService {
         Instant dueAtFinal = request.dueAt() != null ? request.dueAt() : nowUtc.plus(defaultLoanDays, ChronoUnit.DAYS);
         if (dueAtFinal.isBefore(nowUtc)) throw new IllegalArgumentException("dueAt must be in the future");
 
-        Member member = memberRepository.findById(request.memberId()).orElseThrow(() -> new EntityNotFoundException("member"));
+        Member member = memberRepository.
+                findById(request.memberId()).orElseThrow(() -> new NotFoundException("member",request.memberId()));
         Book book = bookRepository.findByIdForUpdate(request.bookId());
-        if (book == null) throw new EntityNotFoundException("book");
+        if (book == null) throw new NotFoundException("book", request.bookId());
 
         if (book.getAvailableCopies() == null || book.getAvailableCopies() <= 0) {
             throw new IllegalStateException("no copies available for this book");

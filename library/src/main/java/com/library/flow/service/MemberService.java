@@ -1,5 +1,6 @@
 package com.library.flow.service;
 
+import com.library.flow.common.error.custom.NotFoundException;
 import com.library.flow.entity.Member;
 import com.library.flow.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,7 +39,7 @@ public class MemberService {
         log.info("updateMemberById: id={}", id);
         Member member = repository.findById(id).orElseThrow(() -> {
             log.warn("updateMemberById: member not found id={}", id);
-            return new EntityNotFoundException("member");
+            return new NotFoundException("member",id);
         });
 
         if (updated.getFullName() != null) {

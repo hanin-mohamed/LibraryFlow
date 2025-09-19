@@ -1,6 +1,7 @@
 package com.library.flow.common.error;
 
 import com.library.flow.common.dto.AppResponse;
+import com.library.flow.common.error.custom.NotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,7 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -86,7 +86,11 @@ public class GlobalExceptionHandler {
                         "Forbidden"
                 ));
     }
-
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<AppResponse<Void>> handleNotFound(NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(AppResponse.error(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<AppResponse<Void>> handleOther(Exception ex, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

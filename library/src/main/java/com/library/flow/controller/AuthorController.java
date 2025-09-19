@@ -41,8 +41,7 @@ public class AuthorController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','LIBRARIAN')")
     public AppResponse<UUID> addAuthor(@Valid @RequestBody CreateAuthorRequest body) {
-        UUID id = service.createAuthor(body);
-        return AppResponse.created(id);
+        return AppResponse.created(service.createAuthor(body));
     }
 
     @PutMapping("/{id}")

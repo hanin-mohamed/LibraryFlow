@@ -1,6 +1,7 @@
 package com.library.flow.service;
 
 import com.library.flow.common.dto.CreateAuthorRequest;
+import com.library.flow.common.error.custom.NotFoundException;
 import com.library.flow.entity.Author;
 import com.library.flow.repository.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,19 +20,22 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
 
     @Transactional
-    public UUID createAuthor(CreateAuthorRequest author){
+    public UUID createAuthor(CreateAuthorRequest request) {
         log.info("createAuthor: start");
+        Author author = new Author();
+        author.setName(request.name());
         authorRepository.save(author);
         log.info("createAuthor: saved id={}", author.getId());
         return author.getId();
     }
+
 
     @Transactional
     public void updateAuthorInfo(UUID id, Author author){
         log.info("updateAuthorInfo: id={}", id);
         Author a = authorRepository.findById(id).orElseThrow(() -> {
             log.warn("updateAuthorInfo: author not found id={}", id);
-            return new EntityNotFoundException("author");
+            return new NotFoundException("author",id);
         });
         log.debug("updateAuthorInfo: name -> {}", author.getName());
         a.setName(author.getName());

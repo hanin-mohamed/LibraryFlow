@@ -2,6 +2,7 @@ package com.library.flow.service;
 
 import com.library.flow.common.dto.CreateBookRequest;
 import com.library.flow.common.dto.UpdateBookRequest;
+import com.library.flow.common.error.custom.NotFoundException;
 import com.library.flow.entity.Author;
 import com.library.flow.entity.Book;
 import com.library.flow.entity.Category;
@@ -72,7 +73,7 @@ public class BookService {
         log.info("updateBook: id={}", id);
 
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("book"));
+                .orElseThrow(() -> new NotFoundException("book",id));
 
         if (request.title() != null) book.setTitle(request.title());
         if (request.publicationYear() != null) book.setPublicationYear(request.publicationYear());
@@ -113,7 +114,7 @@ public class BookService {
 
     public void deleteByUUID(UUID id) {
         log.info("deleteByUUID: id={}", id);
-        if (!bookRepository.existsById(id)) throw new EntityNotFoundException("book not found: " + id);
+        if (!bookRepository.existsById(id)) throw new NotFoundException("Book" , id);
         bookRepository.deleteById(id);
         log.info("deleteByUUID: deleted id={}", id);
     }

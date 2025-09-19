@@ -1,5 +1,6 @@
 package com.library.flow.service;
 
+import com.library.flow.common.error.custom.NotFoundException;
 import com.library.flow.entity.Publisher;
 import com.library.flow.repository.PublisherRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,7 +34,7 @@ public class PublisherService {
         log.info("updatePublisher: id={}", id);
         Publisher publisher = repository.findById(id).orElseThrow(() -> {
             log.warn("updatePublisher: publisher not found id={}", id);
-            return new EntityNotFoundException("publisher");
+            return new NotFoundException("publisher",id);
         });
         log.debug("updatePublisher: name -> {}", changes.getName());
         publisher.setName(changes.getName());
